@@ -1,0 +1,106 @@
+<?php require_once('Connections/conex.php'); ?>
+<?php
+if (!function_exists("GetSQLValueString")) {
+function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+{
+  if (PHP_VERSION < 6) {
+    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+  }
+
+  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+
+  switch ($theType) {
+    case "text":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;    
+    case "long":
+    case "int":
+      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+      break;
+    case "double":
+      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+      break;
+    case "date":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;
+    case "defined":
+      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+      break;
+  }
+  return $theValue;
+}
+}
+
+mysql_select_db($database_conex, $conex);
+$query_admin = "SELECT * FROM tbladmin ORDER BY tbladmin.strNombre ASC";
+$admin = mysql_query($query_admin, $conex) or die(mysql_error());
+$row_admin = mysql_fetch_assoc($admin);
+$totalRows_admin = mysql_num_rows($admin);
+?>
+<!DOCTYPE html>
+<html lang = "es">
+  <head>
+    <title>Share Car</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <link rel="shortcut icon" href="imagenes/favicon.ico">
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/fontello.css">
+    <link rel="stylesheet" href="css/tcal.css">
+    <script type="text/javascript" src="tcal.js"></script>
+  </head>
+   <body>
+    <header>
+      <div class="contenedor">
+       <img src="imagenes/coche_letras.png" alt="http://sharecar.hol.es" width="45" height="45">
+        <h1>Share Car</h1>
+        
+        <input type="checkbox" id="menu-bar">
+        <label class="icon-menu" for="menu-bar"></label>
+        <div class="paranombres">
+          <h4><a href=""><p>&nbsp;</p></a></h4>
+          <h4></h4>
+          <h4></h4>
+         </div>
+  <?php include("includes/menu.php"); ?>
+      </div>
+    </header>
+    <main>
+     <section id="banner">
+      <div class="slider">
+       <ul>
+         <li><img src="imagenes/cabecera_1.jpg" alt="http://smcatering.hol.es/"></li>
+         <li><img src="imagenes/cabecera_2.jpg" alt="http://smcatering.hol.es/"></li>
+         <li><img src="imagenes/cabecera_3.jpg" alt="http://smcatering.hol.es/"></li>
+       </ul>
+     <div class="contenedor">
+     <h2>SHARE CAR</h2>
+     <P>Viajes Más Amenos y Económicos</P> 
+     </div>
+     </div>
+   </section>
+   <section id="formularios">
+     <div class="contenedor">
+       <table border="0" cellspacing="5">
+         <tr class="verde">
+           <td align="center" valign="middle"><div align="center">Nombre</div></td>
+           <td align="center" valign="middle"><div align="center">Email</div></td>
+           <td align="center" valign="middle"><div align="center">Password</div></td>
+         </tr>
+         <?php do { ?>
+           <tr>
+             <td align="center" valign="middle"><strong><?php echo $row_admin['strNombre']; ?></strong></td>
+             <td align="center" valign="middle"><strong><?php echo $row_admin['strEmail']; ?></strong></td>
+             <td align="center" valign="middle"><strong><?php echo $row_admin['strPassword']; ?></strong></td>
+           </tr>
+           <?php } while ($row_admin = mysql_fetch_assoc($admin)); ?>
+       </table>
+     </div>
+   </section>
+   
+    </main>
+    </body>
+</html>
+<?php
+mysql_free_result($admin);
+?>
